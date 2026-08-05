@@ -75,20 +75,24 @@
 
         .input-field {
             width: 100%;
-            padding: 12px 14px;
+            padding: 10px 14px;
             background: var(--bg-input);
             border: 1px solid var(--border);
             border-radius: 8px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             transition: 0.2s;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
         }
 
         .input-field:focus {
             border-color: var(--accent);
             box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        select.input-field {
+            cursor: pointer;
         }
 
         .btn-primary {
@@ -117,8 +121,8 @@
         /* MAIN APP */
         #app {
             display: none;
-            width: 920px;
-            height: 600px;
+            width: 950px;
+            height: 640px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -161,7 +165,7 @@
         }
 
         .sidebar {
-            width: 210px;
+            width: 220px;
             background: #111319;
             border-right: 1px solid var(--border);
             padding: 15px 10px;
@@ -283,6 +287,14 @@
             background: var(--accent-hover);
         }
 
+        .ui-button.danger {
+            background: var(--danger);
+        }
+
+        .ui-button.danger:hover {
+            background: #dc2626;
+        }
+
         /* TOGGLE */
         .switch {
             position: relative;
@@ -342,7 +354,7 @@
             user-select: text;
         }
 
-        /* TEXTCOPY COMPONENT [C] */
+        /* TEXTCOPY COMPONENT */
         .textcopy-container {
             background: var(--bg-input);
             border: 1px solid var(--border);
@@ -389,10 +401,37 @@
             text-decoration: underline;
         }
 
-        /* JSON EDITOR */
+        /* CONFIG MAKER WORKSPACE */
+        .maker-box {
+            background: #111319;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .maker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .maker-element-item {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
         textarea.json-editor {
             width: 100%;
-            height: 330px;
+            height: 300px;
             background: #0d0e12;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -408,6 +447,7 @@
         .btn-group {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         #toast {
@@ -446,7 +486,7 @@
                 <span id="uiSiteTitle">Roria site</span>
                 <span id="uiTeamName" class="brand-badge">Roria Team</span>
             </div>
-            <span style="font-size: 12px; color: var(--text-muted);">JSON Driven UI Framework</span>
+            <span style="font-size: 12px; color: var(--text-muted);">Config Powered UI Framework</span>
         </div>
 
         <div class="window-body">
@@ -460,7 +500,7 @@
     <script>
         const SYSTEM_PASS = "fohu-washere";
 
-        // CONFIG DEFAULT SCHEMA INCLUDING ALL 8 REQUESTED TYPES
+        // DEFAULT CONFIG SCHEMA
         let defaultConfig = {
     "siteTitle": "Roria site",
     "teamBadge": "Roria Team",
@@ -547,6 +587,8 @@
 };
 
         let currentConfig = JSON.parse(JSON.stringify(defaultConfig));
+        let makerState = JSON.parse(JSON.stringify(currentConfig));
+        let selectedMakerTabIndex = 0;
 
         function verifyPassword() {
             const input = document.getElementById("passwordInput").value;
@@ -597,21 +639,18 @@
 
                 // Render JSON Elements
                 tab.elements.forEach(elem => {
-                    // 1. TITLE
                     if (elem.type === "title") {
                         const h = document.createElement("div");
                         h.className = "ui-section-title";
                         h.innerText = elem.text;
                         tabPane.appendChild(h);
                     } 
-                    // 2. TEXT
                     else if (elem.type === "text") {
                         const txt = document.createElement("div");
                         txt.className = "ui-text-block";
                         txt.innerText = elem.text;
                         tabPane.appendChild(txt);
                     }
-                    // 3. LINKTEXT (Blue clickable link)
                     else if (elem.type === "linktext") {
                         const link = document.createElement("a");
                         link.className = "ui-link-text";
@@ -620,7 +659,6 @@
                         link.innerText = elem.text;
                         tabPane.appendChild(link);
                     }
-                    // 4. TEXTCOPY (Text with [C] copy tag)
                     else if (elem.type === "textcopy") {
                         const box = document.createElement("div");
                         box.className = "textcopy-container";
@@ -634,7 +672,6 @@
                         };
                         tabPane.appendChild(box);
                     }
-                    // 5. COPYBUTTON (Shows button only, hides content until copied)
                     else if (elem.type === "copybutton") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
@@ -648,7 +685,6 @@
                         };
                         tabPane.appendChild(card);
                     }
-                    // 6. BUTTON (Executes custom JS from JSON)
                     else if (elem.type === "button") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
@@ -664,7 +700,7 @@
                                 try {
                                     new Function(elem.jsCode)();
                                 } catch (err) {
-                                    alert("Error executing JSON JavaScript: " + err.message);
+                                    alert("Error executing JavaScript: " + err.message);
                                 }
                             } else {
                                 showToast("Button Clicked!");
@@ -672,7 +708,6 @@
                         };
                         tabPane.appendChild(card);
                     }
-                    // 7. TOGGLE
                     else if (elem.type === "toggle") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
@@ -688,7 +723,6 @@
                         `;
                         tabPane.appendChild(card);
                     }
-                    // 8. CODEBOX
                     else if (elem.type === "codebox") {
                         const box = document.createElement("div");
                         box.className = "code-container";
@@ -705,7 +739,9 @@
                         };
                         tabPane.appendChild(box);
                     }
-                    // JSON EDITOR COMPONENT
+                    else if (elem.type === "config_maker_builder") {
+                        tabPane.appendChild(renderConfigMakerUI());
+                    }
                     else if (elem.type === "json_editor") {
                         const wrap = document.createElement("div");
                         wrap.style.display = "flex";
@@ -725,6 +761,7 @@
                         applyBtn.onclick = () => {
                             try {
                                 currentConfig = JSON.parse(textarea.value);
+                                makerState = JSON.parse(JSON.stringify(currentConfig));
                                 initUI();
                                 showToast("UI re-rendered from Config!");
                             } catch (e) {
@@ -766,12 +803,273 @@
             });
         }
 
+        // --- VISUAL CONFIG MAKER RENDERER ---
+        function renderConfigMakerUI() {
+            const container = document.createElement("div");
+            container.style.display = "flex";
+            container.style.flexDirection = "column";
+            container.style.gap = "14px";
+
+            // Title
+            const title = document.createElement("div");
+            title.className = "ui-section-title";
+            title.innerText = "🛠️ Visual Config Maker";
+            container.appendChild(title);
+
+            // 1. GLOBAL SETTINGS
+            const globalBox = document.createElement("div");
+            globalBox.className = "maker-box";
+            globalBox.innerHTML = `
+                <div style="font-weight:600; font-size:14px; color:var(--accent);">1. Global Site Info</div>
+                <div class="maker-grid">
+                    <input type="text" id="makerSiteTitle" class="input-field" placeholder="Site Title" value="${makerState.siteTitle || ''}">
+                    <input type="text" id="makerTeamBadge" class="input-field" placeholder="Team Badge" value="${makerState.teamBadge || ''}">
+                </div>
+            `;
+            container.appendChild(globalBox);
+
+            // 2. TAB MANAGEMENT
+            const tabBox = document.createElement("div");
+            tabBox.className = "maker-box";
+            
+            let tabSelectOptions = makerState.tabs.map((t, idx) => `<option value="${idx}" ${idx === selectedMakerTabIndex ? 'selected' : ''}>${t.icon || '📌'} ${t.title}</option>`).join('');
+
+            tabBox.innerHTML = `
+                <div style="font-weight:600; font-size:14px; color:var(--accent);">2. Manage & Select Tab</div>
+                <div class="maker-grid">
+                    <select id="makerTabSelect" class="input-field">${tabSelectOptions}</select>
+                    <button class="ui-button danger" id="btnDeleteTab">Delete Active Tab</button>
+                </div>
+                <div style="font-size:12px; color:var(--text-muted); margin-top: 4px;">Add New Tab:</div>
+                <div class="maker-grid">
+                    <input type="text" id="newTabTitle" class="input-field" placeholder="Tab Title (e.g. Main Hub)">
+                    <input type="text" id="newTabIcon" class="input-field" placeholder="Icon Emoji (e.g. ⚡)">
+                </div>
+                <button class="ui-button" id="btnAddTab">Add Tab</button>
+            `;
+            container.appendChild(tabBox);
+
+            // Event listener for tab select change
+            setTimeout(() => {
+                const tabSel = document.getElementById("makerTabSelect");
+                if (tabSel) {
+                    tabSel.onchange = (e) => {
+                        selectedMakerTabIndex = parseInt(e.target.value);
+                        initUI();
+                        // Re-open config maker tab
+                        switchTab("config_maker_tab", document.querySelectorAll(".nav-item")[1]);
+                    };
+                }
+
+                const btnAddTab = document.getElementById("btnAddTab");
+                if (btnAddTab) {
+                    btnAddTab.onclick = () => {
+                        const tTitle = document.getElementById("newTabTitle").value.trim();
+                        const tIcon = document.getElementById("newTabIcon").value.trim() || "📌";
+                        if (!tTitle) return alert("Please enter Tab Title");
+                        const tId = tTitle.toLowerCase().replace(/[^a-z0-9]/g, "_") + "_" + Date.now();
+                        makerState.tabs.push({ id: tId, title: tTitle, icon: tIcon, elements: [] });
+                        selectedMakerTabIndex = makerState.tabs.length - 1;
+                        initUI();
+                        switchTab("config_maker_tab", document.querySelectorAll(".nav-item")[1]);
+                        showToast("Tab added!");
+                    };
+                }
+
+                const btnDeleteTab = document.getElementById("btnDeleteTab");
+                if (btnDeleteTab) {
+                    btnDeleteTab.onclick = () => {
+                        if (makerState.tabs.length <= 1) return alert("You must keep at least one tab!");
+                        makerState.tabs.splice(selectedMakerTabIndex, 1);
+                        selectedMakerTabIndex = 0;
+                        initUI();
+                        switchTab("config_maker_tab", document.querySelectorAll(".nav-item")[1]);
+                        showToast("Tab deleted!");
+                    };
+                }
+            }, 0);
+
+            // 3. ELEMENT BUILDER FOR ACTIVE TAB
+            const elemBox = document.createElement("div");
+            elemBox.className = "maker-box";
+            
+            const activeTab = makerState.tabs[selectedMakerTabIndex] || makerState.tabs[0];
+
+            elemBox.innerHTML = `
+                <div style="font-weight:600; font-size:14px; color:var(--accent);">3. Add Element to "${activeTab ? activeTab.title : ''}"</div>
+                <select id="elemTypeSelect" class="input-field">
+                    <option value="title">title - Section Header</option>
+                    <option value="text">text - Paragraph Text</option>
+                    <option value="linktext">linktext - Clickable Link</option>
+                    <option value="textcopy">textcopy - Text with [C] Copy Tag</option>
+                    <option value="copybutton">copybutton - Button with Copy Function</option>
+                    <option value="button">button - Button with Custom JS</option>
+                    <option value="toggle">toggle - Switch Toggle</option>
+                    <option value="codebox">codebox - Script Display</option>
+                </select>
+                
+                <div id="dynamicFields"></div>
+
+                <button class="ui-button" id="btnAddElement">Add Element to Tab</button>
+            `;
+            container.appendChild(elemBox);
+
+            // Render Dynamic Input Fields based on Selected Element Type
+            setTimeout(() => {
+                const elemTypeSelect = document.getElementById("elemTypeSelect");
+                const dynamicFields = document.getElementById("dynamicFields");
+
+                function updateFields() {
+                    const val = elemTypeSelect.value;
+                    if (val === "title" || val === "text") {
+                        dynamicFields.innerHTML = `<input type="text" id="f_text" class="input-field" placeholder="Text content">`;
+                    } else if (val === "linktext") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_text" class="input-field" placeholder="Link Label Text">
+                            <input type="text" id="f_url" class="input-field" placeholder="URL (e.g. https://google.com)">
+                        `;
+                    } else if (val === "textcopy") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_text" class="input-field" placeholder="Display Text">
+                            <input type="text" id="f_copyText" class="input-field" placeholder="Text to copy">
+                        `;
+                    } else if (val === "copybutton") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_buttonText" class="input-field" placeholder="Button Title">
+                            <input type="text" id="f_copyText" class="input-field" placeholder="Content to Copy">
+                        `;
+                    } else if (val === "button") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_title" class="input-field" placeholder="Title">
+                            <input type="text" id="f_desc" class="input-field" placeholder="Description (Optional)">
+                            <input type="text" id="f_buttonText" class="input-field" placeholder="Button Text">
+                            <input type="text" id="f_jsCode" class="input-field" placeholder="JavaScript Code (e.g. alert('Hi'))">
+                        `;
+                    } else if (val === "toggle") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_title" class="input-field" placeholder="Toggle Title">
+                            <input type="text" id="f_desc" class="input-field" placeholder="Description (Optional)">
+                        `;
+                    } else if (val === "codebox") {
+                        dynamicFields.innerHTML = `
+                            <input type="text" id="f_title" class="input-field" placeholder="Script Title">
+                            <input type="text" id="f_code" class="input-field" placeholder="Script Code (e.g. loadstring(...)())">
+                        `;
+                    }
+                }
+
+                if (elemTypeSelect) {
+                    elemTypeSelect.onchange = updateFields;
+                    updateFields();
+                }
+
+                const btnAddElement = document.getElementById("btnAddElement");
+                if (btnAddElement) {
+                    btnAddElement.onclick = () => {
+                        const type = elemTypeSelect.value;
+                        let newElem = { type: type };
+
+                        if (type === "title" || type === "text") {
+                            newElem.text = document.getElementById("f_text").value;
+                        } else if (type === "linktext") {
+                            newElem.text = document.getElementById("f_text").value;
+                            newElem.url = document.getElementById("f_url").value;
+                        } else if (type === "textcopy") {
+                            newElem.text = document.getElementById("f_text").value;
+                            newElem.copyText = document.getElementById("f_copyText").value;
+                        } else if (type === "copybutton") {
+                            newElem.buttonText = document.getElementById("f_buttonText").value;
+                            newElem.copyText = document.getElementById("f_copyText").value;
+                        } else if (type === "button") {
+                            newElem.title = document.getElementById("f_title").value;
+                            newElem.desc = document.getElementById("f_desc").value;
+                            newElem.buttonText = document.getElementById("f_buttonText").value;
+                            newElem.jsCode = document.getElementById("f_jsCode").value;
+                        } else if (type === "toggle") {
+                            newElem.title = document.getElementById("f_title").value;
+                            newElem.desc = document.getElementById("f_desc").value;
+                            newElem.default = true;
+                        } else if (type === "codebox") {
+                            newElem.title = document.getElementById("f_title").value;
+                            newElem.code = document.getElementById("f_code").value;
+                        }
+
+                        activeTab.elements.push(newElem);
+                        initUI();
+                        switchTab("config_maker_tab", document.querySelectorAll(".nav-item")[1]);
+                        showToast("Element added to tab!");
+                    };
+                }
+            }, 0);
+
+            // 4. LIST OF ELEMENTS IN CURRENT TAB
+            const listContainer = document.createElement("div");
+            listContainer.className = "maker-box";
+            listContainer.innerHTML = `<div style="font-weight:600; font-size:14px; color:var(--accent);">4. Active Elements in Tab (${activeTab ? activeTab.elements.length : 0})</div>`;
+
+            if (activeTab && activeTab.elements) {
+                activeTab.elements.forEach((el, index) => {
+                    const item = document.createElement("div");
+                    item.className = "maker-element-item";
+                    item.innerHTML = `
+                        <span><b>[${el.type}]</b> ${el.title || el.text || el.buttonText || 'Element'}</span>
+                        <button class="ui-button danger" style="padding: 4px 8px; font-size: 11px;">Remove</button>
+                    `;
+                    item.querySelector("button").onclick = () => {
+                        activeTab.elements.splice(index, 1);
+                        initUI();
+                        switchTab("config_maker_tab", document.querySelectorAll(".nav-item")[1]);
+                        showToast("Element removed!");
+                    };
+                    listContainer.appendChild(item);
+                });
+            }
+            container.appendChild(listContainer);
+
+            // 5. ACTION BUTTONS
+            const actionGroup = document.createElement("div");
+            actionGroup.className = "btn-group";
+
+            const applyMakerBtn = document.createElement("button");
+            applyMakerBtn.className = "ui-button";
+            applyMakerBtn.innerText = "🚀 Apply Config to Site";
+            applyMakerBtn.onclick = () => {
+                makerState.siteTitle = document.getElementById("makerSiteTitle").value;
+                makerState.teamBadge = document.getElementById("makerTeamBadge").value;
+                currentConfig = JSON.parse(JSON.stringify(makerState));
+                initUI();
+                showToast("New Config Applied to Site!");
+            };
+
+            const exportMakerBtn = document.createElement("button");
+            exportMakerBtn.className = "ui-button";
+            exportMakerBtn.innerText = "💾 Export .json File";
+            exportMakerBtn.onclick = () => {
+                makerState.siteTitle = document.getElementById("makerSiteTitle").value;
+                makerState.teamBadge = document.getElementById("makerTeamBadge").value;
+                const blob = new Blob([JSON.stringify(makerState, null, 4)], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "roria_config.json";
+                a.click();
+                showToast("Config File Downloaded!");
+            };
+
+            actionGroup.appendChild(applyMakerBtn);
+            actionGroup.appendChild(exportMakerBtn);
+            container.appendChild(actionGroup);
+
+            return container;
+        }
+
         function switchTab(tabId, element) {
             document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
             document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
 
-            element.classList.add("active");
-            document.getElementById(`tab_${tabId}`).classList.add("active");
+            if (element) element.classList.add("active");
+            const targetPane = document.getElementById(`tab_${tabId}`);
+            if (targetPane) targetPane.classList.add("active");
         }
     </script>
 </body>
