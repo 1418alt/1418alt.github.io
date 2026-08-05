@@ -462,42 +462,89 @@
 
         // CONFIG DEFAULT SCHEMA INCLUDING ALL 8 REQUESTED TYPES
         let defaultConfig = {
-            "siteTitle": "Roria site",
-            "teamBadge": "Roria Team",
-            "tabs": [
+    "siteTitle": "Roria site",
+    "teamBadge": "Roria Team",
+    "tabs": [
+        {
+            "id": "elements_demo",
+            "title": "UI Components",
+            "icon": "⚡",
+            "elements": [
                 {
-                    "id": "elements_demo",
-                    "title": "UI Components",
-                    "icon": "⚡",
-                    "elements": [
-                        { "type": "title", "text": "1. Title & Text Elements" },
-                        { "type": "text", "text": "This is standard text describing how to use the Roria UI framework." },
-                        { "type": "linktext", "text": "🔗 Click here to visit Google Website", "url": "https://www.google.com" },
-
-                        { "type": "title", "text": "2. Copy Elements" },
-                        { "type": "textcopy", "text": "Discord Server: roria_team_official", "copyText": "roria_team_official" },
-                        { "type": "copybutton", "buttonText": "Copy Secret Exec Key", "copyText": "RORIA-EXEC-KEY-998123" },
-
-                        { "type": "title", "text": "3. Interactive Features" },
-                        { "type": "button", "title": "Run Custom JavaScript", "desc": "Executes JS code defined inside JSON", "buttonText": "Run JS", "jsCode": "alert('JavaScript Code Executed from JSON Config!');" },
-                        { "type": "toggle", "title": "Auto Execution Mode", "desc": "Toggle auto script injection", "default": true },
-
-                        { "type": "title", "text": "4. Script Display" },
-                        { "type": "codebox", "title": "Universal Fly Script", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Fly/main/code.lua'))()" }
-                    ]
+                    "type": "title",
+                    "text": "1. Title & Text Elements"
                 },
                 {
-                    "id": "config_manager",
-                    "title": "Config Manager",
-                    "icon": "⚙️",
-                    "elements": [
-                        { "type": "title", "text": "JSON Configuration System" },
-                        { "type": "text", "text": "Modify the JSON below to add or remove elements, then click Apply JSON to update the site instantly." },
-                        { "type": "json_editor" }
-                    ]
+                    "type": "text",
+                    "text": "This is standard text describing how to use the Roria UI framework."
+                },
+                {
+                    "type": "linktext",
+                    "text": "🔗 Click here to visit Google Website",
+                    "url": "https://www.google.com"
+                },
+                {
+                    "type": "title",
+                    "text": "2. Copy Elements"
+                },
+                {
+                    "type": "textcopy",
+                    "text": "Discord Server: https://discord.gg/8tgpzCB5eA",
+                    "copyText": "https://discord.gg/8tgpzCB5eA"
+                },
+                {
+                    "type": "copybutton",
+                    "buttonText": "Copy Secret Team Key",
+                    "copyText": "RORIA-5R345RY6474567T"
+                },
+                {
+                    "type": "title",
+                    "text": "3. Interactive Features"
+                },
+                {
+                    "type": "button",
+                    "title": "Run Custom JavaScript",
+                    "desc": "Executes JS code defined inside JSON",
+                    "buttonText": "Run JS",
+                    "jsCode": "alert('JavaScript Code Executed from JSON Config!');"
+                },
+                {
+                    "type": "toggle",
+                    "title": "toggle system is work in process",
+                    "desc": "meow",
+                    "default": true
+                },
+                {
+                    "type": "title",
+                    "text": "4. Script Display"
+                },
+                {
+                    "type": "codebox",
+                    "title": "CodeBox",
+                    "code": "Roria was here"
                 }
             ]
-        };
+        },
+        {
+            "id": "config_manager",
+            "title": "Config Manager",
+            "icon": "⚙️",
+            "elements": [
+                {
+                    "type": "title",
+                    "text": "JSON Configuration System"
+                },
+                {
+                    "type": "text",
+                    "text": "Modify the JSON below to add or remove elements, then click Apply JSON to update the site instantly."
+                },
+                {
+                    "type": "json_editor"
+                }
+            ]
+        }
+    ]
+};
 
         let currentConfig = JSON.parse(JSON.stringify(defaultConfig));
 
