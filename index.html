@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roria Site</title>
+    <style>
+        :root {
+            --bg-main: #0b0c10;
+            --bg-card: #15171e;
+            --bg-input: #1f222d;
+            --accent: #8b5cf6;
+            --accent-hover: #7c3aed;
+            --accent-glow: rgba(139, 92, 246, 0.3);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #2e3344;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* --- LOGIN SCREEN --- */
+        #loginGate {
+            position: fixed;
+            inset: 0;
+            background: rgba(11, 12, 16, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px var(--accent-glow);
+        }
+
+        .login-card h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .login-card p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 14px;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 8px var(--accent-glow);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* --- MAIN UI CONTAINER --- */
+        #app {
+            display: none;
+            width: 900px;
+            height: 580px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 0 25px var(--accent-glow);
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Top Header Bar */
+        .window-header {
+            height: 48px;
+            background: #111319;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Layout Main */
+        .window-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 200px;
+            background: #111319;
+            border-right: 1px solid var(--border);
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .nav-item {
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: var(--accent);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .tab-pane {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        .tab-pane.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* UI Library Elements */
+        .ui-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            margin-bottom: 4px;
+            color: var(--accent);
+        }
+
+        .ui-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .ui-card-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .ui-card-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ui-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .ui-button {
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+
+        .ui-button:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #2b3040;
+            transition: .3s;
+            border-radius: 22px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* Code Block */
+        .code-container {
+            background: #0d0e12;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px;
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .code-content {
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            color: #a7f3d0;
+            word-break: break-all;
+            user-select: text;
+        }
+
+        /* JSON Config Editor Area */
+        textarea.json-editor {
+            width: 100%;
+            height: 320px;
+            background: #0d0e12;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: #38bdf8;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            padding: 12px;
+            outline: none;
+            resize: none;
+            user-select: text;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Notification Toast */
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--accent);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 2000;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PASSWORD LOGIN GATE -->
+    <div id="loginGate">
+        <div class="login-card">
+            <h1 id="gateTitle">Roria site</h1>
+            <p>Enter team password to access portal</p>
+            <input type="password" id="passwordInput" class="input-field" placeholder="Password..." autofocus>
+            <button class="btn-primary" onclick="verifyPassword()">Authenticate</button>
+            <div id="loginError" class="error-msg">Invalid password. Access denied.</div>
+        </div>
+    </div>
+
+    <!-- MAIN APP INTERFACE -->
+    <div id="app">
+        <div class="window-header">
+            <div class="brand">
+                <span id="uiSiteTitle">Roria site</span>
+                <span id="uiTeamName" class="brand-badge">Roria Team</span>
+            </div>
+            <span style="font-size: 12px; color: var(--text-muted);">Config Powered UI Library</span>
+        </div>
+
+        <div class="window-body">
+            <!-- Dynamic Sidebar -->
+            <div class="sidebar" id="sidebar"></div>
+
+            <!-- Dynamic Tab Content -->
+            <div class="content-area" id="contentArea"></div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast">Notification</div>
+
+    <script>
+        // PASSCODE CONTROL
+        const SYSTEM_PASS = "fohu-washere";
+
+        // DEFAULT CHEAT UI CONFIG SCHEMA
+        let defaultConfig = {
+            "siteTitle": "Roria site",
+            "teamBadge": "Roria Team",
+            "tabs": [
+                {
+                    "id": "main_hub",
+                    "title": "Main Hub",
+                    "icon": "⚡",
+                    "elements": [
+                        { "type": "header", "text": "Execution & Control" },
+                        { "type": "paragraph", "title": "Welcome", "desc": "This site is dynamically rendered using an editable JSON config. Edit and share your config files!" },
+                        { "type": "button", "title": "Copy Loader Script", "desc": "Copy main script execution string to clipboard", "buttonText": "Copy Code", "copyText": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Loader/main/script.lua'))()" },
+                        { "type": "toggle", "title": "Auto Attach", "desc": "Automatically hook to active instance", "default": true }
+                    ]
+                },
+                {
+                    "id": "scripts_tab",
+                    "title": "Script Hub",
+                    "icon": "📜",
+                    "elements": [
+                        { "type": "header", "text": "Roria Utility Scripts" },
+                        { "type": "codebox", "title": "Universal Fly Script", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Fly/main/code.lua'))()" },
+                        { "type": "codebox", "title": "ESP & Tracers", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/ESP/main/code.lua'))()" }
+                    ]
+                },
+                {
+                    "id": "config_manager",
+                    "title": "Config System",
+                    "icon": "⚙️",
+                    "elements": [
+                        { "type": "header", "text": "JSON Configuration Manager" },
+                        { "type": "paragraph", "title": "Config Customization", "desc": "Edit the raw JSON below to modify tab names, titles, buttons, and code blocks. Click Apply to render instantly." },
+                        { "type": "json_editor" }
+                    ]
+                }
+            ]
+        };
+
+        let currentConfig = JSON.parse(JSON.stringify(defaultConfig));
+
+        function verifyPassword() {
+            const input = document.getElementById("passwordInput").value;
+            if (input === SYSTEM_PASS) {
+                document.getElementById("loginGate").style.display = "none";
+                document.getElementById("app").style.display = "flex";
+                initUI();
+            } else {
+                const error = document.getElementById("loginError");
+                error.style.display = "block";
+                setTimeout(() => { error.style.display = "none"; }, 3000);
+            }
+        }
+
+        document.getElementById("passwordInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") verifyPassword();
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.style.display = "block";
+            setTimeout(() => { toast.style.display = "none"; }, 2500);
+        }
+
+        function initUI() {
+            document.getElementById("uiSiteTitle").innerText = currentConfig.siteTitle || "Roria site";
+            document.getElementById("uiTeamName").innerText = currentConfig.teamBadge || "Roria Team";
+
+            const sidebar = document.getElementById("sidebar");
+            const contentArea = document.getElementById("contentArea");
+            
+            sidebar.innerHTML = "";
+            contentArea.innerHTML = "";
+
+            currentConfig.tabs.forEach((tab, index) => {
+                // Render Sidebar Items
+                const navItem = document.createElement("div");
+                navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
+                navItem.innerHTML = `<span>${tab.icon || '📌'}</span> <span>${tab.title}</span>`;
+                navItem.onclick = () => switchTab(tab.id, navItem);
+                sidebar.appendChild(navItem);
+
+                // Render Content Pane
+                const tabPane = document.createElement("div");
+                tabPane.id = `tab_${tab.id}`;
+                tabPane.className = `tab-pane ${index === 0 ? 'active' : ''}`;
+
+                // Render Elements
+                tab.elements.forEach(elem => {
+                    if (elem.type === "header") {
+                        const h = document.createElement("div");
+                        h.className = "ui-section-title";
+                        h.innerText = elem.text;
+                        tabPane.appendChild(h);
+                    } 
+                    else if (elem.type === "paragraph") {
+                        const card = document.createElement("div");
+                        card.className = "ui-card";
+                        card.innerHTML = `
+                            <div class="ui-card-info">
+                                <div class="ui-card-title">${elem.title}</div>
+                                <div class="ui-card-desc">${elem.desc}</div>
+                            </div>
+                        `;
+                        tabPane.appendChild(card);
+                    }
+                    else if (elem.type === "button") {
+                        const card = document.createElement("div");
+                        card.className = "ui-card";
+                        card.innerHTML = `
+                            <div class="ui-card-info">
+                                <div class="ui-card-title">${elem.title}</div>
+                                <div class="ui-card-desc">${elem.desc}</div>
+                            </div>
+                            <button class="ui-button">${elem.buttonText || "Execute"}</button>
+                        `;
+                        card.querySelector("button").onclick = () => {
+                            if (elem.copyText) {
+                                navigator.clipboard.writeText(elem.copyText);
+                                showToast("Copied to clipboard!");
+                            } else {
+                                showToast("Action Executed!");
+                            }
+                        };
+                        tabPane.appendChild(card);
+                    }
+                    else if (elem.type === "toggle") {
+                        const card = document.createElement("div");
+                        card.className = "ui-card";
+                        card.innerHTML = `
+                            <div class="ui-card-info">
+                                <div class="ui-card-title">${elem.title}</div>
+                                <div class="ui-card-desc">${elem.desc}</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" ${elem.default ? "checked" : ""}>
+                                <span class="slider"></span>
+                            </label>
+                        `;
+                        tabPane.appendChild(card);
+                    }
+                    else if (elem.type === "codebox") {
+                        const box = document.createElement("div");
+                        box.className = "code-container";
+                        box.innerHTML = `
+                            <div class="code-header">
+                                <span>${elem.title}</span>
+                                <button class="ui-button" style="padding: 4px 8px; font-size: 11px;">Copy</button>
+                            </div>
+                            <div class="code-content">${elem.code}</div>
+                        `;
+                        box.querySelector("button").onclick = () => {
+                            navigator.clipboard.writeText(elem.code);
+                            showToast("Script copied!");
+                        };
+                        tabPane.appendChild(box);
+                    }
+                    else if (elem.type === "json_editor") {
+                        const wrap = document.createElement("div");
+                        wrap.style.display = "flex";
+                        wrap.style.flexDirection = "column";
+                        wrap.style.gap = "12px";
+
+                        const textarea = document.createElement("textarea");
+                        textarea.className = "json-editor";
+                        textarea.value = JSON.stringify(currentConfig, null, 4);
+
+                        const btnGroup = document.createElement("div");
+                        btnGroup.className = "btn-group";
+
+                        const applyBtn = document.createElement("button");
+                        applyBtn.className = "ui-button";
+                        applyBtn.innerText = "Apply JSON";
+                        applyBtn.onclick = () => {
+                            try {
+                                currentConfig = JSON.parse(textarea.value);
+                                initUI();
+                                showToast("UI updated from Config!");
+                            } catch (e) {
+                                alert("Invalid JSON Syntax!");
+                            }
+                        };
+
+                        const copyBtn = document.createElement("button");
+                        copyBtn.className = "ui-button";
+                        copyBtn.innerText = "Copy JSON";
+                        copyBtn.onclick = () => {
+                            navigator.clipboard.writeText(textarea.value);
+                            showToast("Config copied to clipboard!");
+                        };
+
+                        const exportBtn = document.createElement("button");
+                        exportBtn.className = "ui-button";
+                        exportBtn.innerText = "Export .json File";
+                        exportBtn.onclick = () => {
+                            const blob = new Blob([textarea.value], { type: "application/json" });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement("a");
+                            a.href = url;
+                            a.download = "roria_config.json";
+                            a.click();
+                            showToast("Config downloaded!");
+                        };
+
+                        btnGroup.appendChild(applyBtn);
+                        btnGroup.appendChild(copyBtn);
+                        btnGroup.appendChild(exportBtn);
+                        wrap.appendChild(textarea);
+                        wrap.appendChild(btnGroup);
+                        tabPane.appendChild(wrap);
+                    }
+                });
+
+                contentArea.appendChild(tabPane);
+            });
+        }
+
+        function switchTab(tabId, element) {
+            document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".tab-pane").forEach(el => el.classList.remove("active"));
+
+            element.classList.add("active");
+            document.getElementById(`tab_${tabId}`).classList.add("active");
+        }
+    </script>
+</body>
+</html>
