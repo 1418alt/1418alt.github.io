@@ -14,6 +14,8 @@
             --accent-glow: rgba(139, 92, 246, 0.3);
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
+            --link-color: #3b82f6;
+            --link-hover: #60a5fa;
             --border: #2e3344;
             --success: #10b981;
             --danger: #ef4444;
@@ -37,7 +39,7 @@
             overflow: hidden;
         }
 
-        /* --- LOGIN SCREEN --- */
+        /* LOGIN GATE */
         #loginGate {
             position: fixed;
             inset: 0;
@@ -63,7 +65,6 @@
             font-size: 24px;
             margin-bottom: 8px;
             color: #fff;
-            letter-spacing: 1px;
         }
 
         .login-card p {
@@ -113,11 +114,11 @@
             display: none;
         }
 
-        /* --- MAIN UI CONTAINER --- */
+        /* MAIN APP */
         #app {
             display: none;
-            width: 900px;
-            height: 580px;
+            width: 920px;
+            height: 600px;
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -126,7 +127,6 @@
             overflow: hidden;
         }
 
-        /* Top Header Bar */
         .window-header {
             height: 48px;
             background: #111319;
@@ -143,7 +143,6 @@
             gap: 10px;
             font-weight: 700;
             font-size: 15px;
-            letter-spacing: 0.5px;
         }
 
         .brand-badge {
@@ -155,16 +154,14 @@
             text-transform: uppercase;
         }
 
-        /* Layout Main */
         .window-body {
             display: flex;
             flex: 1;
             overflow: hidden;
         }
 
-        /* Sidebar Navigation */
         .sidebar {
-            width: 200px;
+            width: 210px;
             background: #111319;
             border-right: 1px solid var(--border);
             padding: 15px 10px;
@@ -197,20 +194,19 @@
             font-weight: 600;
         }
 
-        /* Content Area */
         .content-area {
             flex: 1;
             padding: 25px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
         }
 
         .tab-pane {
             display: none;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
             animation: fadeIn 0.2s ease-in-out;
         }
 
@@ -223,21 +219,31 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* UI Library Elements */
+        /* UI ELEMENTS */
         .ui-section-title {
             font-size: 16px;
             font-weight: 700;
             border-bottom: 1px solid var(--border);
             padding-bottom: 8px;
-            margin-bottom: 4px;
+            margin-top: 6px;
             color: var(--accent);
+        }
+
+        .ui-text-block {
+            font-size: 13.5px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
         }
 
         .ui-card {
             background: var(--bg-input);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 14px 18px;
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -247,7 +253,7 @@
         .ui-card-info {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 3px;
         }
 
         .ui-card-title {
@@ -277,7 +283,7 @@
             background: var(--accent-hover);
         }
 
-        /* Toggle Switch */
+        /* TOGGLE */
         .switch {
             position: relative;
             display: inline-block;
@@ -311,13 +317,12 @@
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(22px); }
 
-        /* Code Block */
+        /* CODEBOX */
         .code-container {
             background: #0d0e12;
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 12px;
-            position: relative;
         }
 
         .code-header {
@@ -330,17 +335,64 @@
         }
 
         .code-content {
-            font-family: 'Consolas', 'Courier New', monospace;
+            font-family: 'Consolas', monospace;
             font-size: 12px;
             color: #a7f3d0;
             word-break: break-all;
             user-select: text;
         }
 
-        /* JSON Config Editor Area */
+        /* TEXTCOPY COMPONENT [C] */
+        .textcopy-container {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .copy-btn-tag {
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .copy-btn-tag:hover {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        /* LINKTEXT */
+        .ui-link-text {
+            color: var(--link-color);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .ui-link-text:hover {
+            color: var(--link-hover);
+            text-decoration: underline;
+        }
+
+        /* JSON EDITOR */
         textarea.json-editor {
             width: 100%;
-            height: 320px;
+            height: 330px;
             background: #0d0e12;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -358,7 +410,6 @@
             gap: 10px;
         }
 
-        /* Notification Toast */
         #toast {
             position: fixed;
             bottom: 20px;
@@ -377,10 +428,10 @@
 </head>
 <body>
 
-    <!-- PASSWORD LOGIN GATE -->
+    <!-- PASSWORD GATE -->
     <div id="loginGate">
         <div class="login-card">
-            <h1 id="gateTitle">Roria site</h1>
+            <h1>Roria site</h1>
             <p>Enter team password to access portal</p>
             <input type="password" id="passwordInput" class="input-field" placeholder="Password..." autofocus>
             <button class="btn-primary" onclick="verifyPassword()">Authenticate</button>
@@ -388,65 +439,60 @@
         </div>
     </div>
 
-    <!-- MAIN APP INTERFACE -->
+    <!-- MAIN APP -->
     <div id="app">
         <div class="window-header">
             <div class="brand">
                 <span id="uiSiteTitle">Roria site</span>
                 <span id="uiTeamName" class="brand-badge">Roria Team</span>
             </div>
-            <span style="font-size: 12px; color: var(--text-muted);">Config Powered UI Library</span>
+            <span style="font-size: 12px; color: var(--text-muted);">JSON Driven UI Framework</span>
         </div>
 
         <div class="window-body">
-            <!-- Dynamic Sidebar -->
             <div class="sidebar" id="sidebar"></div>
-
-            <!-- Dynamic Tab Content -->
             <div class="content-area" id="contentArea"></div>
         </div>
     </div>
 
-    <!-- TOAST NOTIFICATION -->
     <div id="toast">Notification</div>
 
     <script>
-        // PASSCODE CONTROL
         const SYSTEM_PASS = "fohu-washere";
 
-        // DEFAULT CHEAT UI CONFIG SCHEMA
+        // CONFIG DEFAULT SCHEMA INCLUDING ALL 8 REQUESTED TYPES
         let defaultConfig = {
             "siteTitle": "Roria site",
             "teamBadge": "Roria Team",
             "tabs": [
                 {
-                    "id": "main_hub",
-                    "title": "Main Hub",
+                    "id": "elements_demo",
+                    "title": "UI Components",
                     "icon": "⚡",
                     "elements": [
-                        { "type": "header", "text": "Execution & Control" },
-                        { "type": "paragraph", "title": "Welcome", "desc": "This site is dynamically rendered using an editable JSON config. Edit and share your config files!" },
-                        { "type": "button", "title": "Copy Loader Script", "desc": "Copy main script execution string to clipboard", "buttonText": "Copy Code", "copyText": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Loader/main/script.lua'))()" },
-                        { "type": "toggle", "title": "Auto Attach", "desc": "Automatically hook to active instance", "default": true }
-                    ]
-                },
-                {
-                    "id": "scripts_tab",
-                    "title": "Script Hub",
-                    "icon": "📜",
-                    "elements": [
-                        { "type": "header", "text": "Roria Utility Scripts" },
-                        { "type": "codebox", "title": "Universal Fly Script", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Fly/main/code.lua'))()" },
-                        { "type": "codebox", "title": "ESP & Tracers", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/ESP/main/code.lua'))()" }
+                        { "type": "title", "text": "1. Title & Text Elements" },
+                        { "type": "text", "text": "This is standard text describing how to use the Roria UI framework." },
+                        { "type": "linktext", "text": "🔗 Click here to visit Google Website", "url": "https://www.google.com" },
+
+                        { "type": "title", "text": "2. Copy Elements" },
+                        { "type": "textcopy", "text": "Discord Server: roria_team_official", "copyText": "roria_team_official" },
+                        { "type": "copybutton", "buttonText": "Copy Secret Exec Key", "copyText": "RORIA-EXEC-KEY-998123" },
+
+                        { "type": "title", "text": "3. Interactive Features" },
+                        { "type": "button", "title": "Run Custom JavaScript", "desc": "Executes JS code defined inside JSON", "buttonText": "Run JS", "jsCode": "alert('JavaScript Code Executed from JSON Config!');" },
+                        { "type": "toggle", "title": "Auto Execution Mode", "desc": "Toggle auto script injection", "default": true },
+
+                        { "type": "title", "text": "4. Script Display" },
+                        { "type": "codebox", "title": "Universal Fly Script", "code": "loadstring(game:HttpGet('https://raw.githubusercontent.com/Roria/Fly/main/code.lua'))()" }
                     ]
                 },
                 {
                     "id": "config_manager",
-                    "title": "Config System",
+                    "title": "Config Manager",
                     "icon": "⚙️",
                     "elements": [
-                        { "type": "header", "text": "JSON Configuration Manager" },
-                        { "type": "paragraph", "title": "Config Customization", "desc": "Edit the raw JSON below to modify tab names, titles, buttons, and code blocks. Click Apply to render instantly." },
+                        { "type": "title", "text": "JSON Configuration System" },
+                        { "type": "text", "text": "Modify the JSON below to add or remove elements, then click Apply JSON to update the site instantly." },
                         { "type": "json_editor" }
                     ]
                 }
@@ -490,64 +536,103 @@
             contentArea.innerHTML = "";
 
             currentConfig.tabs.forEach((tab, index) => {
-                // Render Sidebar Items
+                // Sidebar item
                 const navItem = document.createElement("div");
                 navItem.className = `nav-item ${index === 0 ? 'active' : ''}`;
                 navItem.innerHTML = `<span>${tab.icon || '📌'}</span> <span>${tab.title}</span>`;
                 navItem.onclick = () => switchTab(tab.id, navItem);
                 sidebar.appendChild(navItem);
 
-                // Render Content Pane
+                // Tab content container
                 const tabPane = document.createElement("div");
                 tabPane.id = `tab_${tab.id}`;
                 tabPane.className = `tab-pane ${index === 0 ? 'active' : ''}`;
 
-                // Render Elements
+                // Render JSON Elements
                 tab.elements.forEach(elem => {
-                    if (elem.type === "header") {
+                    // 1. TITLE
+                    if (elem.type === "title") {
                         const h = document.createElement("div");
                         h.className = "ui-section-title";
                         h.innerText = elem.text;
                         tabPane.appendChild(h);
                     } 
-                    else if (elem.type === "paragraph") {
+                    // 2. TEXT
+                    else if (elem.type === "text") {
+                        const txt = document.createElement("div");
+                        txt.className = "ui-text-block";
+                        txt.innerText = elem.text;
+                        tabPane.appendChild(txt);
+                    }
+                    // 3. LINKTEXT (Blue clickable link)
+                    else if (elem.type === "linktext") {
+                        const link = document.createElement("a");
+                        link.className = "ui-link-text";
+                        link.href = elem.url || "#";
+                        link.target = "_blank";
+                        link.innerText = elem.text;
+                        tabPane.appendChild(link);
+                    }
+                    // 4. TEXTCOPY (Text with [C] copy tag)
+                    else if (elem.type === "textcopy") {
+                        const box = document.createElement("div");
+                        box.className = "textcopy-container";
+                        box.innerHTML = `
+                            <span>${elem.text}</span>
+                            <button class="copy-btn-tag">[C]</button>
+                        `;
+                        box.querySelector(".copy-btn-tag").onclick = () => {
+                            navigator.clipboard.writeText(elem.copyText || elem.text);
+                            showToast("Copied text!");
+                        };
+                        tabPane.appendChild(box);
+                    }
+                    // 5. COPYBUTTON (Shows button only, hides content until copied)
+                    else if (elem.type === "copybutton") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
                         card.innerHTML = `
-                            <div class="ui-card-info">
-                                <div class="ui-card-title">${elem.title}</div>
-                                <div class="ui-card-desc">${elem.desc}</div>
-                            </div>
+                            <span class="ui-card-title">${elem.buttonText || "Copy Item"}</span>
+                            <button class="ui-button">Copy</button>
                         `;
+                        card.querySelector("button").onclick = () => {
+                            navigator.clipboard.writeText(elem.copyText || "");
+                            showToast("Copied to clipboard!");
+                        };
                         tabPane.appendChild(card);
                     }
+                    // 6. BUTTON (Executes custom JS from JSON)
                     else if (elem.type === "button") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
                         card.innerHTML = `
                             <div class="ui-card-info">
                                 <div class="ui-card-title">${elem.title}</div>
-                                <div class="ui-card-desc">${elem.desc}</div>
+                                <div class="ui-card-desc">${elem.desc || ''}</div>
                             </div>
                             <button class="ui-button">${elem.buttonText || "Execute"}</button>
                         `;
                         card.querySelector("button").onclick = () => {
-                            if (elem.copyText) {
-                                navigator.clipboard.writeText(elem.copyText);
-                                showToast("Copied to clipboard!");
+                            if (elem.jsCode) {
+                                try {
+                                    new Function(elem.jsCode)();
+                                } catch (err) {
+                                    alert("Error executing JSON JavaScript: " + err.message);
+                                }
                             } else {
-                                showToast("Action Executed!");
+                                showToast("Button Clicked!");
                             }
                         };
                         tabPane.appendChild(card);
                     }
+                    // 7. TOGGLE
                     else if (elem.type === "toggle") {
                         const card = document.createElement("div");
                         card.className = "ui-card";
                         card.innerHTML = `
                             <div class="ui-card-info">
                                 <div class="ui-card-title">${elem.title}</div>
-                                <div class="ui-card-desc">${elem.desc}</div>
+                                <div class="ui-card-desc">${elem.desc || ''}</div>
                             </div>
                             <label class="switch">
                                 <input type="checkbox" ${elem.default ? "checked" : ""}>
@@ -556,6 +641,7 @@
                         `;
                         tabPane.appendChild(card);
                     }
+                    // 8. CODEBOX
                     else if (elem.type === "codebox") {
                         const box = document.createElement("div");
                         box.className = "code-container";
@@ -572,6 +658,7 @@
                         };
                         tabPane.appendChild(box);
                     }
+                    // JSON EDITOR COMPONENT
                     else if (elem.type === "json_editor") {
                         const wrap = document.createElement("div");
                         wrap.style.display = "flex";
@@ -592,7 +679,7 @@
                             try {
                                 currentConfig = JSON.parse(textarea.value);
                                 initUI();
-                                showToast("UI updated from Config!");
+                                showToast("UI re-rendered from Config!");
                             } catch (e) {
                                 alert("Invalid JSON Syntax!");
                             }
@@ -600,15 +687,15 @@
 
                         const copyBtn = document.createElement("button");
                         copyBtn.className = "ui-button";
-                        copyBtn.innerText = "Copy JSON";
+                        copyBtn.innerText = "Copy Config";
                         copyBtn.onclick = () => {
                             navigator.clipboard.writeText(textarea.value);
-                            showToast("Config copied to clipboard!");
+                            showToast("Config JSON copied!");
                         };
 
                         const exportBtn = document.createElement("button");
                         exportBtn.className = "ui-button";
-                        exportBtn.innerText = "Export .json File";
+                        exportBtn.innerText = "Download .json";
                         exportBtn.onclick = () => {
                             const blob = new Blob([textarea.value], { type: "application/json" });
                             const url = URL.createObjectURL(blob);
